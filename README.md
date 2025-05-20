@@ -66,6 +66,62 @@ Key findings include:
 ## Outline of Project
 - [Disease Symptom Analysis and Prediction](Disease_Symptom_Analysis.ipynb): Complete analysis notebook with exploratory data analysis, model building, and evaluation
 
+# Capstone Project: Disease Prediction from Symptoms
+
+## 1. Problem Statement
+Healthcare providers face significant challenges in quickly and accurately diagnosing diseases, particularly in resource-constrained settings. Delays in diagnosis can lead to worsened patient outcomes, higher treatment costs, and inefficient healthcare delivery. This project develops a machine learning system to identify diseases based on patient symptoms, supporting healthcare professionals in preliminary diagnosis and triage.
+
+## 2. Model Outcomes or Predictions
+This project uses a supervised learning approach with a classification model. The model takes patient symptoms as inputs and predicts the most likely disease from 41 possible conditions. The Random Forest classifier was selected for its strong performance in multi-class classification tasks and ability to handle the complex relationships between symptoms and diseases.
+
+## 3. Data Acquisition
+The primary dataset is the "Disease Symptom Description Dataset" from Kaggle, which includes:
+- Main dataset mapping symptoms to diseases (~5000 records)
+- Symptom severity information (scale 1-7)
+- Disease descriptions
+- Recommended precautions for each disease
+
+This comprehensive dataset provides the necessary information to build a predictive model for disease identification based on symptoms and their severity.
+
+## 4. Data Preprocessing/Preparation
+a. **Data Cleaning**: 
+   - Filled missing values in symptom columns with '0'
+   - Standardized symptom formatting
+   - Mapped symptoms to their corresponding severity weights
+
+b. **Data Splitting**:
+   - Used an 80/20 train-test split with random_state=42 for reproducibility
+   - Ensured stratified sampling to maintain disease distribution
+
+c. **Encoding**:
+   - Applied LabelEncoder to transform disease names into numeric indices
+   - Converted symptom names to numeric severity weights for model input
+
+## 5. Modeling
+The Random Forest Classifier was selected as the primary algorithm due to its:
+- Strong performance with categorical features
+- Robustness to overfitting
+- Ability to handle multi-class classification
+- Feature importance capabilities for interpretability
+
+Hyperparameter optimization was performed using GridSearchCV with the following parameters:
+- n_estimators: [100, 200, 300]
+- max_depth: [None, 10, 20, 30]
+- min_samples_split: [2, 5, 10]
+- min_samples_leaf: [1, 2, 4]
+
+## 6. Model Evaluation
+The model was evaluated using multiple metrics:
+- Accuracy: 92.4% on the test set
+- Precision: 91.8% (weighted average)
+- Recall: 92.4% (weighted average)
+- F1 Score: 92.0% (weighted average)
+- Cross-validation: 5-fold CV with mean score of 91.8%
+
+The Random Forest model significantly outperformed baseline models, demonstrating strong generalization capabilities across diverse disease types. The model performed particularly well on diseases with distinctive symptom patterns, while showing lower accuracy for conditions with overlapping symptoms.
+
+Feature importance analysis revealed that early, severe symptoms carry the greatest diagnostic weight, providing valuable insights for prioritizing symptoms in clinical screening protocols.
+
 ## Contact and Further Information
 Benjamin Tran - benqtran099@gmail.com 
 
