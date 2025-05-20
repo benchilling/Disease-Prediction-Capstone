@@ -1,128 +1,101 @@
-# Disease Prediction from Symptoms
+Stroke Prediction Analysis
+Healthcare Analytics Final Report
+1. Problem Statement
+Stroke is a leading cause of death and disability worldwide, with early detection and prevention being critical for reducing its impact. This project aims to develop a predictive model that can identify individuals at high risk of stroke based on their demographic information, medical history, and lifestyle factors. By accurately predicting stroke risk, healthcare providers can implement targeted preventive interventions for high-risk patients, potentially saving lives and reducing healthcare costs.
+The challenge lies in building a model that can effectively handle the significant class imbalance in the data (only about 5% of cases are positive for stroke) while maintaining both precision and recall. Additionally, the model needs to provide interpretable insights that can guide clinical decisions.
+2. Model Outcomes or Predictions
+Type of Learning: Classification (Supervised Learning)
+Expected Output: Binary classification (1 = stroke, 0 = no stroke)
+Our models predict the probability of a patient experiencing a stroke based on their health data. We've implemented three supervised learning algorithms: Random Forest, Support Vector Machine (SVM), and Logistic Regression. Each model provides probability estimates that can be thresholded to optimize for different clinical objectives (e.g., maximizing recall to identify most at-risk patients, or balancing precision and recall for resource-limited settings).
+3. Data Acquisition
+The analysis uses the Stroke Prediction Dataset, containing healthcare information for 5,110 patients with the following features:
 
-**Author**: Benjamin Tran
+Demographic features: gender, age
+Medical history: hypertension, heart disease, average glucose level, BMI
+Lifestyle factors: smoking status, work type, residence type, marital status
+Target variable: stroke occurrence (binary: 0 = no stroke, 1 = stroke)
 
-## Executive Summary
-This project develops a machine learning system that can accurately predict diseases based on patient symptoms. Using a Random Forest classifier trained on the Disease Symptom Description Dataset from Kaggle, the model achieves over 90% accuracy in disease identification. The project demonstrates significant potential for supporting healthcare professionals in preliminary diagnosis, improving patient outcomes through faster identification of conditions, and optimizing healthcare resource allocation.
+The dataset exhibits significant class imbalance with only 4.87% of patients having experienced a stroke. This imbalance presents a challenge for model development and evaluation.
 
-## Rationale
-Quickly and accurately identifying diseases based on symptoms can save lives by ensuring timely treatment. If patients experience delays in receiving correct diagnoses, their health conditions often worsen, leading to poorer outcomes and increased healthcare costs. In resource-constrained settings, automated symptom-based disease prediction can extend diagnostic capabilities, particularly in areas with physician shortages. This analysis helps healthcare providers make faster, more informed decisions, improving patient outcomes and reducing misdiagnoses.
+4. Data Preprocessing/Preparation
+a. Handling Missing Values and Inconsistencies:
 
-## Research Question
-How accurately can machine learning models predict diseases based on patient-reported symptoms, and which symptoms are most predictive of specific conditions?
+Identified missing values in the BMI column (201 records with 'N/A' values, about 3.93% of the data)
+Implemented two strategies for comparison:
 
-## Data Sources
-This project utilizes the Disease Symptom Description Dataset from Kaggle, created by Itachi9604. The dataset includes:
-- `dataset.csv`: ~5000 entries mapping symptoms to 41 diseases
-- `Symptom-severity.csv`: Severity weights for symptoms (scale 1-7)
-- `symptom_Description.csv`: Descriptions of various diseases
-- `symptom_precaution.csv`: Precautions for each disease
+Removal: Dropped rows with missing BMI values for simplicity
+Imputation: Used median imputation as an alternative approach in the code
 
-## Methodology
-1. **Exploratory Data Analysis**: Analyzed disease distribution, symptom frequency, and symptom severity patterns
-2. **Data Preprocessing**: 
-   - Handled missing values in symptom columns
-   - Encoded diseases using LabelEncoder
-   - Mapped symptoms to their severity weights
-   - Split data into training (80%) and testing (20%) sets
-3. **Model Development**:
-   - Implemented a Random Forest Classifier as specified in the requirements
-   - Optimized hyperparameters using GridSearchCV
-   - Evaluated performance using cross-validation
-4. **Model Evaluation**:
-   - Measured accuracy, precision, recall, and F1-score
-   - Analyzed feature importance to identify key predictive symptoms
-   - Assessed model performance across different diseases
 
-## Results
-The Random Forest model demonstrated strong performance:
-- Overall Accuracy: >90% on test data
-- Precision: >90% (weighted average)
-- Recall: >90% (weighted average)
-- F1 Score: >90% (weighted average)
+Converted categorical variables to dummy variables using one-hot encoding
+Standardized numerical features using StandardScaler to ensure all features contribute equally to the model
 
-Key findings include:
-1. Symptom Importance: Certain symptoms are significantly more predictive than others
-2. Disease-Specific Patterns: Some diseases have distinctive symptom signatures making them easier to diagnose
-3. Diagnostic Challenges: Conditions with overlapping symptom profiles show lower prediction accuracy
-4. Severity Insights: High-severity symptoms provide stronger diagnostic signals
+b. Training/Test Split:
 
-## Next Steps
-1. **Model Enhancement**:
-   - Incorporate patient demographic data to improve prediction accuracy
-   - Develop specialty-specific models (pediatric, geriatric)
-   - Add time-based symptom progression analysis
+Split the data using a 80/20 ratio (80% training, 20% testing)
+Implemented stratified sampling to maintain the same class distribution in both sets
+Used random seed (42) for reproducibility
 
-2. **Clinical Implementation**:
-   - Create an intuitive interface for healthcare providers
-   - Develop integration with electronic health record systems
-   - Design mobile applications for remote assessment
+c. Additional Analysis and Encoding:
 
-3. **Expanded Research**:
-   - Include more diverse patient populations
-   - Add comorbidity analysis for patients with multiple conditions
-   - Incorporate treatment outcome data for personalized medicine
+Converted categorical variables to dummy variables using one-hot encoding
+Applied feature scaling using StandardScaler
+Implemented SMOTE (Synthetic Minority Over-sampling Technique) as an optional step to address class imbalance
+Used cross-validation to ensure model robustness
+Optimized decision thresholds for imbalanced classification
 
-## Outline of Project
-- [Disease Symptom Analysis and Prediction](Disease_Symptom_Analysis.ipynb): Complete analysis notebook with exploratory data analysis, model building, and evaluation
+5. Modeling
+We selected and implemented three different classification algorithms to predict stroke risk:
 
-# Capstone Project: Disease Prediction from Symptoms
+A. Random Forest:
 
-## 1. Problem Statement
-Healthcare providers face significant challenges in quickly and accurately diagnosing diseases, particularly in resource-constrained settings. Delays in diagnosis can lead to worsened patient outcomes, higher treatment costs, and inefficient healthcare delivery. This project develops a machine learning system to identify diseases based on patient symptoms, supporting healthcare professionals in preliminary diagnosis and triage.
+Ensemble method using multiple decision trees to reduce overfitting
+Can handle non-linear relationships and interactions between features
+Provides feature importance measures for model interpretability
+Hyperparameters tuned: n_estimators, max_depth, min_samples_split, min_samples_leaf, class_weight
 
-## 2. Model Outcomes or Predictions
-This project uses a supervised learning approach with a classification model. The model takes patient symptoms as inputs and predicts the most likely disease from 41 possible conditions. The Random Forest classifier was selected for its strong performance in multi-class classification tasks and ability to handle the complex relationships between symptoms and diseases.
+B. Support Vector Machine (SVM):
 
-## 3. Data Acquisition
-The primary dataset is the "Disease Symptom Description Dataset" from Kaggle, which includes:
-- Main dataset mapping symptoms to diseases (~5000 records)
-- Symptom severity information (scale 1-7)
-- Disease descriptions
-- Recommended precautions for each disease
+Effective in high-dimensional spaces
+Can handle complex decision boundaries
+Less prone to overfitting in text classification problems
+Hyperparameters tuned: C, kernel, gamma, class_weight
 
-This comprehensive dataset provides the necessary information to build a predictive model for disease identification based on symptoms and their severity.
+C. Logistic Regression:
 
-## 4. Data Preprocessing/Preparation
-a. **Data Cleaning**: 
-   - Filled missing values in symptom columns with '0'
-   - Standardized symptom formatting
-   - Mapped symptoms to their corresponding severity weights
+Simple, interpretable model
+Provides odds ratios that quantify risk factors
+Efficient training and prediction
+Hyperparameters tuned: C, penalty, solver, class_weight
 
-b. **Data Splitting**:
-   - Used an 80/20 train-test split with random_state=42 for reproducibility
-   - Ensured stratified sampling to maintain disease distribution
+Each model was implemented with class weights to address the significant class imbalance, and we used cross-validation to ensure reliable performance estimates.
 
-c. **Encoding**:
-   - Applied LabelEncoder to transform disease names into numeric indices
-   - Converted symptom names to numeric severity weights for model input
+6. Model Evaluation
+Evaluation Metrics:
+Given the significant class imbalance (4.87% stroke cases), we prioritized:
 
-## 5. Modeling
-The Random Forest Classifier was selected as the primary algorithm due to its:
-- Strong performance with categorical features
-- Robustness to overfitting
-- Ability to handle multi-class classification
-- Feature importance capabilities for interpretability
+F1 Score - Harmonic mean of precision and recall
+Recall - Ability to identify positive cases (critical for stroke detection)
+ROC AUC - Overall discriminative ability
+Precision-Recall AUC - Performance on the minority class
 
-Hyperparameter optimization was performed using GridSearchCV with the following parameters:
-- n_estimators: [100, 200, 300]
-- max_depth: [None, 10, 20, 30]
-- min_samples_split: [2, 5, 10]
-- min_samples_leaf: [1, 2, 4]
+Model Selection:
 
-## 6. Model Evaluation
-The model was evaluated using multiple metrics:
-- Accuracy: 92.4% on the test set
-- Precision: 91.8% (weighted average)
-- Recall: 92.4% (weighted average)
-- F1 Score: 92.0% (weighted average)
-- Cross-validation: 5-fold CV with mean score of 91.8%
+Random Forest achieved the highest F1 score (0.252), providing the best balance between precision and recall
+SVM showed the highest recall (0.897), making it effective at identifying stroke cases at the cost of more false positives
+Logistic Regression achieved perfect recall (1.000) but with very low precision (0.051), resulting in the lowest F1 score
 
-The Random Forest model significantly outperformed baseline models, demonstrating strong generalization capabilities across diverse disease types. The model performed particularly well on diseases with distinctive symptom patterns, while showing lower accuracy for conditions with overlapping symptoms.
+Feature Importance:
 
-Feature importance analysis revealed that early, severe symptoms carry the greatest diagnostic weight, providing valuable insights for prioritizing symptoms in clinical screening protocols.
+Age was consistently the most important predictor across all models
+Glucose level, hypertension, and heart disease were also significant predictors
+The odds ratios from Logistic Regression provided valuable clinical interpretability (e.g., age with an OR of 7.69, indicating dramatically increased stroke risk with age)
 
-## Contact and Further Information
-Benjamin Tran - benqtran099@gmail.com 
+Final Model Selection:
+The model choice depends on the specific clinical objective:
 
-For more details on the methodology and comprehensive findings, please refer to the Jupyter notebook.
+For balanced performance: Random Forest
+For detecting the maximum number of stroke cases: Logistic Regression or SVM
+For clinical interpretation and communication: Logistic Regression
+
+I recommend the Random Forest model for general use due to its superior F1 score and ability to balance precision and recall.
